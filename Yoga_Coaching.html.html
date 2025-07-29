@@ -1,0 +1,164 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aarupadai Siddha Yoga Nilayam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Noto Serif', serif;
+    }
+    .hero-bg {
+      background-image: url('https://i.pinimg.com/originals/e9/fa/bf/e9fabfda8477328bb9767abef571cd41.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    .section-bg {
+      background-image: url('https://wallpaperaccess.com/thumb/490164.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .card-img {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- Hero Section -->
+  <section class="hero-bg py-20 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">ஆறுபடை யோகா நிலையம் சந்தோஷ்</h1>
+      <p class="text-lg md:text-xl mb-6">Invoke the divine power of Lord Murugan through the discipline of Yoga. Join our classes to harmonize your body, mind, and soul with Master Santhosh</p>
+      <a href="#booking" class="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition">Reserve Your Spot</a>
+    </div>
+  </section>
+
+  <!-- Why Choose Siddha Yoga -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Why Choose Siddha Yoga?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div class="text-center">
+          <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Holistic Healing" class="card-img mx-auto mb-4 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold mb-2">🧘‍♀️ Holistic Healing</h3>
+          <p>உடலும் ஆன்மாவும் சமநிலைப்பட செய்யும் சித்தர் மரபில் அடங்கிய பண்டைய யோகப்பயிற்சிகளை கற்கவும்.</p>
+        </div>
+        <div class="text-center">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Nature & Serenity" class="card-img mx-auto mb-4 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold mb-2">🌿 Nature & Serenity</h3>
+          <p>ஆழமான தியானம் மற்றும் மூச்சுப்பயிற்சிக்கு ஏற்ற அமைதியான, பசுமை சூழலுடன் கூடிய இடத்தில் வகுப்புகள் நடத்தப்படுகின்றன.</p>
+        </div>
+        <div class="text-center">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Divine Vibration" class="card-img mx-auto mb-4 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold mb-2">🙏 Divine Vibration</h3>
+          <p>வகுப்புகளில் உங்கள் உடலும் ஆன்மாவும் தூய்மை பெறவும், சக்தி பெறவும் முருகபெருமானின் அருளைப் பெறும் மந்திர ஜபங்களும் பூஜைகளும் இடம்பெறும்.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Class Timings -->
+  <section class="py-16 section-bg text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-8">Class Timings</h2>
+      <p class="text-lg mb-4">🕗 Morning Batch: 6:00 AM - 7:00 AM (Monday to Friday)</p>
+      <p class="text-lg">📿 Weekend Special: 8:00 AM - 9:30 AM & 4:00 PM - 5:30 PM (Saturday & Sunday)</p>
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section id="booking" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8">Book Your Yoga Class</h2>
+      <p class="text-center mb-6">Fill in the form below to secure your place. We will reach out with confirmation and payment details.</p>
+      <form action="https://formspree.io/f/your-form-id" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium">Name</label>
+          <input type="text" id="name" name="name" required class="w-full p-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium">Email</label>
+          <input type="email" id="email" name="email" required class="w-full p-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="phone" class="block text-sm font-medium">Phone</label>
+          <input type="tel" id="phone" name="phone" required class="w-full p-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="batch" class="block text-sm font-medium">Preferred Batch</label>
+          <select id="batch" name="batch" required class="w-full p-2 border rounded-md">
+            <option value="morning">Morning Batch (6:00 AM - 7:00 AM)</option>
+            <option value="weekend-morning">Weekend Morning (8:00 AM - 9:30 AM)</option>
+            <option value="weekend-evening">Weekend Evening (4:00 PM - 5:30 PM)</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 transition">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Contact Us -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-8">Contact Us</h2>
+      <p class="text-lg mb-4">📞 Call/WhatsApp: <a href="tel:+916380361058" class="text-indigo-600 hover:underline">+91 6380361058</a></p>
+      <p class="text-lg">📸 Instagram: <a href="https://l.instagram.com/?u=https%3A%2F%2Fwww.instagram.com%2Fp%2FB_eza5dlZRL%2F%3Figshid%3DYmMyMTA2M2Y%253D%26fbclid%3DPAZXh0bgNhZW0CMTEAAafmeb0aeHrVtoR5bdk3hHl5KFo6xyOE0Od-Q_iumsZv6eRhKX-FEoisXmnaNA_aem__04-JSNcp_sC9NBV8WstWA&e=AT1FtsPeplgOHReteocgDdEMmQiR_SLLcMI0wr_e6fKtIjm9QIfsaA6_8e6iPH0M03uMH5CnkMuB8I11lPAPdou7UGgmtNql9cv9P4nD0j8hsTnFGdS2IYM" class="text-indigo-600 hover:underline">@santhosh_sanjayan</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-6 bg-indigo-600 text-white text-center">
+    <p>© 2025 Aarupadai Siddha Yoga Nilayam. Powered by divine grace. | Website by Santhosh Kumar</p>
+  </footer>
+
+  <script>
+    // Basic form submission feedback
+    document.querySelector('form').addEventListener('submit', function(e) {
+      alert('Thank you for your submission! We will reach out with confirmation and payment details.');
+    });
+  </script>
+</body>
+</html>
